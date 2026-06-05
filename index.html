@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>진로진학 플랫폼 - 직업·학과·대입 탐색 서비스</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface2: #f0efe9;
+      --text: #1a1a18;
+      --text2: #5a5a56;
+      --text3: #9a9a94;
+      --accent: #1d6ef5;
+      --accent-light: #e8f0fe;
+      --border: rgba(0,0,0,0.08);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247,246,242,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-badge {
+      font-size: 11px;
+      background: #fff3cd;
+      color: #856404;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      border: 1px solid #ffc10740;
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 100px 2rem 80px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--text2);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .hero-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+    .hero-cta svg { width: 18px; height: 18px; }
+
+    /* FEATURES */
+    .section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem 100px;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .feature-card.blue::before  { background: #1d6ef5; }
+    .feature-card.teal::before  { background: #0f9e75; }
+    .feature-card.amber::before { background: #e09a00; }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.07); }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 1.25rem;
+    }
+    .feature-card.blue  .feature-icon { background: #e8f0fe; }
+    .feature-card.teal  .feature-icon { background: #e1f5ee; }
+    .feature-card.amber .feature-icon { background: #fef3e2; }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.2px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.65;
+      margin-bottom: 1.25rem;
+    }
+    .feature-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      background: var(--surface2);
+    }
+    .coming-soon {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffc10730;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* HOW IT WORKS */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      counter-reset: step;
+    }
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      counter-increment: step;
+      position: relative;
+    }
+    .step-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .step h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .step p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    footer p {
+      font-size: 13px;
+      color: var(--text3);
+    }
+    footer a {
+      color: var(--text2);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--text); }
+
+    /* SEARCH DEMO */
+    .demo-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+    .demo-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 1.5rem;
+      width: fit-content;
+    }
+    .demo-tab {
+      padding: 7px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text2);
+      transition: all 0.15s;
+    }
+    .demo-tab.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .search-row {
+      display: flex;
+      gap: 8px;
+    }
+    .search-input {
+      flex: 1;
+      height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 1rem;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .search-btn {
+      height: 44px;
+      padding: 0 20px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .search-btn:hover { opacity: 0.88; }
+    .demo-notice {
+      margin-top: 1rem;
+      font-size: 13px;
+      color: var(--text3);
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 60px 1.25rem 60px; }
+      .section { padding: 0 1.25rem 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#"><span>진로</span>진학 플랫폼</a>
+    <ul class="nav-links">
+      <li><a href="#features">기능 소개</a></li>
+      <li><a href="#how">사용 방법</a></li>
+      <li><a href="#contact">문의</a></li>
+    </ul>
+    <span class="nav-badge">개발 중</span>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-tag">진로진학 통합 서비스</div>
+    <h1>내 미래를<br /><em>직접 탐색</em>하세요</h1>
+    <p>직업·학과 정보부터 대입 비교, AI 세특 추천까지 — 진로 결정에 필요한 모든 것을 한 곳에서.</p>
+    <a href="#features" class="hero-cta">
+      기능 살펴보기
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-label">핵심 기능</div>
+    <h2 class="section-title">세 가지 도구, 하나의 플랫폼</h2>
+
+    <div class="demo-box">
+      <div class="demo-tabs">
+        <button class="demo-tab active">직업 검색</button>
+        <button class="demo-tab">학과 검색</button>
+      </div>
+      <div class="search-row">
+        <input class="search-input" type="text" placeholder="예: 소프트웨어 개발자, 의사, 디자이너..." />
+        <button class="search-btn">검색</button>
+      </div>
+      <p class="demo-notice">※ 커리어넷 API 연동 개발 중입니다. 곧 서비스 예정이에요.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card blue">
+        <div class="feature-icon">🔍</div>
+        <h3>직업·학과 탐색기</h3>
+        <p>커리어넷 공공 API 기반으로 직업 상세 정보와 관련 학과를 탐색하고 서로 연결해 확인할 수 있어요.</p>
+        <div class="feature-tags">
+          <span class="tag">커리어넷 API</span>
+          <span class="tag">직업 정보</span>
+          <span class="tag">학과 정보</span>
+          <span class="tag">연관 탐색</span>
+        </div>
+      </div>
+
+      <div class="feature-card teal">
+        <div class="feature-icon">🏫</div>
+        <h3>대입정보 비교 대시보드<span class="coming-soon">준비 중</span></h3>
+        <p>대학알리미 공시데이터를 바탕으로 원하는 대학들을 나란히 비교하고 취업률·등록금 추이를 시각화해요.</p>
+        <div class="feature-tags">
+          <span class="tag">대학알리미</span>
+          <span class="tag">취업률 비교</span>
+          <span class="tag">등록금 추이</span>
+          <span class="tag">차트 시각화</span>
+        </div>
+      </div>
+
+      <div class="feature-card amber">
+        <div class="feature-icon">✏️</div>
+        <h3>세특 소재 추천 도우미<span class="coming-soon">준비 중</span></h3>
+        <p>과목·희망 진로·관심 키워드를 입력하면 AI가 세특에 쓸 수 있는 활동 소재와 예시문을 추천해드려요.</p>
+        <div class="feature-tags">
+          <span class="tag">Gemini AI</span>
+          <span class="tag">과목별 추천</span>
+          <span class="tag">세특 예시문</span>
+          <span class="tag">진로 연계</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="section-label">사용 방법</div>
+    <h2 class="section-title">간단한 세 단계</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <h4>직업 또는 학과 검색</h4>
+        <p>관심 있는 직업명이나 학과명을 입력해 기본 정보를 확인하세요.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <h4>대학 정보 비교</h4>
+        <p>가고 싶은 대학들을 선택해 취업률·등록금을 한눈에 비교하세요.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <h4>세특 소재 AI 추천</h4>
+        <p>과목과 진로를 입력하면 AI가 맞춤 세특 소재와 예시문을 제안해드려요.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <p>진로진학 플랫폼 · 현재 개발 중인 서비스입니다</p>
+    <p style="margin-top:6px;">
+      데이터 출처: <a href="https://www.career.go.kr" target="_blank">커리어넷</a> ·
+      <a href="https://www.academyinfo.go.kr" target="_blank">대학알리미</a>
+    </p>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.demo-tab');
+    const input = document.querySelector('.search-input');
+    const placeholders = ['예: 소프트웨어 개발자, 의사, 디자이너...', '예: 컴퓨터공학과, 의예과, 경영학과...'];
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        input.placeholder = placeholders[i];
+      });
+    });
+
+    document.querySelector('.search-btn').addEventListener('click', () => {
+      const val = input.value.trim();
+      if (!val) return;
+      alert('현재 개발 중인 기능입니다.\n커리어넷 API 연동 후 서비스 예정이에요!');
+    });
+  </script>
+
+</body>
+</html>
