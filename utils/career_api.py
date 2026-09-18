@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 import requests
 
 # TODO: 여기에 발급받은 인증키를 그대로 넣으세요 (비공개 레포)
-CAREERNET_API_KEY = ""  # <-- 여기 채우기
+CAREERNET_API_KEY = "8f73982a37c6d2bb7670009c3b0b3104"  # <-- 여기 채우기
 
 JOB_LIST_URL = "https://www.career.go.kr/cnet/front/openapi/jobs.json"
 JOB_DETAIL_URL = "https://www.career.go.kr/cnet/front/openapi/job.json"
