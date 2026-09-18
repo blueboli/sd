@@ -177,6 +177,7 @@ else:
             majors = search_major(keyword) if keyword else []
         except Exception:
             st.error("커리어넷 API 호출에 실패했습니다.")
+            st.exception(e)    
             majors = []
 
         if not majors:
