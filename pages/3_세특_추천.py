@@ -103,6 +103,22 @@ if submitted:
                             f"**🚀 심화 탐구 아이디어**  \n"
                             f"{topic['extension']}"
                         )
-                      
+                        # 복사용 전체 텍스트 생성
+                copy_text = ""
+
+                for i, topic in enumerate(topics, start=1):
+                    copy_text += (
+                        f"{i}. {topic['title']}\n"
+                        f"탐구 방향: {topic['direction']}\n"
+                        f"심화 탐구 아이디어: {topic['extension']}\n\n"
+                    )
+
+                st.subheader("📋 추천 결과 복사")
+
+                st.code(
+                    copy_text,
+                    language=None
+                )
+
             except Exception as e:
                 st.error(f"오류가 발생했습니다: {e}")
