@@ -57,7 +57,7 @@ with st.form("recommendation_form"):
         use_container_width=True
     )
 
-# 제출 결과 처
+# 제출 결과 처리
 if submitted:
 
     # 필수값 검증
