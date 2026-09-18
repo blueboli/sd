@@ -15,7 +15,7 @@ st.markdown(
 )
 st.markdown("---")
 
-
+# 입력 폼
 with st.form("recommendation_form"):
     col1, col2 = st.columns(2)
 
@@ -57,9 +57,10 @@ with st.form("recommendation_form"):
         use_container_width=True
     )
 
-
+# 제출 결과 처
 if submitted:
 
+    # 필수값 검증
     if not grade or not interest.strip():
         st.markdown(
             '<p style="color: red; font-weight: bold; font-size: 16px;">'
@@ -70,23 +71,29 @@ if submitted:
         )
 
     else:
+        # Gemini API 호출 중 로딩 표시
         with st.spinner(
             "✨ Gemini 2.5 Flash가 생기부를 빛내줄 반짝이는 아이디어를 "
             "구상 중입니다... 잠시만 기다려주세요!"
         ):
             try:
+                # Gemini API 호출
                 topics = generate_topics(
                     grade,
                     career,
                     interest,
                     inquiry_type
                 )
-
+                
+                # 성공 메시지
                 st.success("🎉 세특 탐구 주제 추천이 완료되었습니다!")
+                
                 st.markdown("---")
 
+                # 추천 결과
                 st.subheader("💡 추천 탐구 주제 리스트")
 
+                # 추천 결과 카드 출력
                 for i, topic in enumerate(topics, start=1):
 
                     with st.container(border=True):
@@ -104,6 +111,7 @@ if submitted:
                             f"{topic['extension']}"
                         )
                         
+                # 복사용 전체 텍스트 생성  
                 copy_text = ""
 
                 for i, topic in enumerate(topics, start=1):
@@ -112,13 +120,15 @@ if submitted:
                         f"탐구 방향: {topic['direction']}\n"
                         f"심화 탐구 아이디어: {topic['extension']}\n\n"
                     )
-
+                    
+                # 복사 영역
                 st.subheader("📋 추천 결과 복사")
 
                 st.code(
                     copy_text,
                     language=None
                 )
-
+                
+            # 오류 처리
             except Exception as e:
                 st.error(f"오류가 발생했습니다: {e}")
