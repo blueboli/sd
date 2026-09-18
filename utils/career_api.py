@@ -42,21 +42,17 @@ def get_job_detail(job_cd) -> dict:
 
 def search_major(keyword: str, gubun: str = "대학교") -> list[dict]:
     """학과정보 목록 검색 -> [{majorSeq, lClass, mClass, facilName}, ...]"""
-    res = requests.get(
-        MAJOR_URL,
-        params={
-            "apiKey": CAREERNET_API_KEY,
-            "svcType": "api",
-            "svcCode": "MAJOR",
-            "contentType": "xml",
-            "gubun": gubun,
-            "searchTitle": keyword,
-        },
-        timeout=5,
-    )
+    query = "&".join([
+        f"apiKey={CAREERNET_API_KEY}",
+        "svcType=api",
+        "svcCode=MAJOR",
+        f"gubun={quote(gubun, encoding='euc-kr')}",
+        "contentType=xml",
+        f"searchTitle={quote(keyword, encoding='euc-kr')}",
+    ])
+    res = requests.get(f"{MAJOR_URL}?{query}", timeout=5)
     res.raise_for_status()
     root = ET.fromstring(res.content)
-    st.write(res.text[:500])  # 디버깅용, 확인 후 삭제
     return [
         {
             "majorSeq": c.findtext("majorSeq"),
@@ -70,18 +66,15 @@ def search_major(keyword: str, gubun: str = "대학교") -> list[dict]:
 
 def get_major_detail(major_seq, gubun: str = "대학교") -> dict:
     """학과정보 상세 -> {major, summary, employment, salary, job, universities, ...}"""
-    res = requests.get(
-        MAJOR_URL,
-        params={
-            "apiKey": CAREERNET_API_KEY,
-            "svcType": "api",
-            "svcCode": "MAJOR_VIEW",
-            "contentType": "xml",
-            "gubun": gubun,
-            "majorSeq": major_seq,
-        },
-        timeout=5,
-    )
+    query = "&".join([
+        f"apiKey={CAREERNET_API_KEY}",
+        "svcType=api",
+        "svcCode=MAJOR_VIEW",
+        f"gubun={quote(gubun, encoding='euc-kr')}",
+        "contentType=xml",
+        f"majorSeq={major_seq}",
+    ])
+    res = requests.get(f"{MAJOR_URL}?{query}", timeout=5)
     res.raise_for_status()
     root = ET.fromstring(res.content)
     content = root.find("content")
