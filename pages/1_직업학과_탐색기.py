@@ -193,4 +193,10 @@ else:
                             show_major_detail(major.get("majorSeq"))
                             st.rerun()
 
-print('sdsadsd')
+st.divider()
+st.subheader('🔧 디버그: search_major 테스트')
+test_keyword = st.text_input('테스트 검색어', '컴퓨터공학')
+if st.button('테스트 실행'): 
+    result = search_major(test_keyword) 
+    st.write('결과 개수:', len(result)) 
+    st.write(result)
