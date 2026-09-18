@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.gemini_api import generate_topics
 
-
+# 페이지 설정
 st.set_page_config(
     page_title="세특 탐구주제 추천",
     page_icon="📚",
