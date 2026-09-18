@@ -103,7 +103,7 @@ if submitted:
                             f"**🚀 심화 탐구 아이디어**  \n"
                             f"{topic['extension']}"
                         )
-                        # 복사용 전체 텍스트 생성
+                        
                 copy_text = ""
 
                 for i, topic in enumerate(topics, start=1):
