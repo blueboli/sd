@@ -42,17 +42,28 @@ def get_job_detail(job_cd) -> dict:
 
 def search_major(keyword: str, gubun: str = "대학교") -> list[dict]:
     """학과정보 목록 검색 -> [{majorSeq, lClass, mClass, facilName}, ...]"""
-    query = "&".join([
-        f"apiKey={CAREERNET_API_KEY}",
-        "svcType=api",
-        "svcCode=MAJOR",
-        f"gubun={quote(gubun, encoding='euc-kr')}",
-        "contentType=xml",
-        f"searchTitle={quote(keyword, encoding='euc-kr')}",
-    ])
-    res = requests.get(f"{MAJOR_URL}?{query}", timeout=5)
+    params = {
+        "apiKey": CAREERNET_API_KEY,
+        "svcType": "api",
+        "svcCode": "MAJOR",
+        "gubun": gubun,          # UTF-8 그대로, 수동 EUC-KR 인코딩 제거
+        "contentType": "xml",
+        "searchTitle": keyword,  # UTF-8 그대로
+    }
+    res = requests.get(MAJOR_URL, params=params, timeout=5)
     res.raise_for_status()
+
+    # 디버깅용 — 원인 확인되면 지워도 됨
+    print("REQUEST URL:", res.url)
+    print("RAW RESPONSE:", res.text[:300])
+
     root = ET.fromstring(res.content)
+    if root.tag != "dataSearch":
+        # <result><content><code>...</code></content></result> 형태면
+        # 인증/서비스 승인 문제일 가능성이 큼
+        print("API ERROR:", res.text)
+        return []
+
     return [
         {
             "majorSeq": c.findtext("majorSeq"),
