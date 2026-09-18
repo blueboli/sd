@@ -55,6 +55,7 @@ def search_major(keyword: str, gubun: str = "대학교") -> list[dict]:
     )
     res.raise_for_status()
     root = ET.fromstring(res.content)
+    st.write(res.text[:500])  # 디버깅용, 확인 후 삭제
     return [
         {
             "majorSeq": c.findtext("majorSeq"),
