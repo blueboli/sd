@@ -7,6 +7,7 @@ F-001 직업/학과 탐색기 - 커리어넷 오픈API 연동
 
 import xml.etree.ElementTree as ET
 
+import streamlit as st 
 import requests
 
 # TODO: 여기에 발급받은 인증키를 그대로 넣으세요 (비공개 레포)
