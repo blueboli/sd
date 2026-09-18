@@ -192,3 +192,5 @@ else:
                         if st.button("상세보기", key=f"major_search_{major.get('majorSeq')}"):
                             show_major_detail(major.get("majorSeq"))
                             st.rerun()
+
+print('sdsadsd')
