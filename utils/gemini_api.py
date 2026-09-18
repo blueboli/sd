@@ -22,12 +22,13 @@ def generate_topics(grade: str, career: str, interest: str, topic_type: str) -> 
             ... (3개)
         ]
     """
-
+    
+    # Gemini API 설정
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
     model = genai.GenerativeModel("gemini-2.5-flash")
 
-    
+    # 프롬프트 구성
     prompt = f"""
 당신은 대한민국 고등학교 교사이자 세특 탐구 주제 추천 전문가입니다.
 
@@ -71,14 +72,14 @@ JSON 이외의 설명이나 Markdown은 출력하지 마세요.
     ]
 }}
 """
-
+    # Gemini 모델 호출
     try:
         response = model.generate_content(prompt)
 
     except Exception as e:
         raise RuntimeError(f"Gemini API 호출 중 오류가 발생했습니다: {e}")
 
-
+    # 응답을 JSON으로 파싱해서 위 형식으로 반환
     try:
         result = json.loads(response.text)
         topics = result["topics"]
