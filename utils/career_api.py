@@ -4,7 +4,7 @@ F-001 직업/학과 탐색기 - 커리어넷 오픈API 연동
 - 직업백과: https://www.career.go.kr/cnet/front/openapi/jobs.json / job.json (JSON)
 - 학과정보: https://www.career.go.kr/cnet/openapi/getOpenApi (XML)
 """
-
+from urllib.parse import quote
 import xml.etree.ElementTree as ET
 
 import streamlit as st 
