@@ -26,7 +26,7 @@ def generate_topics(grade: str, career: str, interest: str, topic_type: str) -> 
     # Gemini API 설정
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-    model = genai.GenerativeModel("gemini-2.5-flash")
+    model = genai.GenerativeModel("gemini-3.8-flash")
 
     # 프롬프트 구성
     prompt = f"""
