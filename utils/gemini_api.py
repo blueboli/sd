@@ -11,6 +11,7 @@ import json
 import streamlit as st
 import google.generativeai as genai
 
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"] 
 
 def generate_topics(grade: str, career: str, interest: str, topic_type: str) -> list[dict]:
     """
