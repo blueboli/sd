@@ -12,7 +12,7 @@ import requests
 import re
 
 # TODO: 여기에 발급받은 인증키를 그대로 넣으세요 (비공개 레포)
-CAREERNET_API_KEY = "3dc1e6f664b6dba28e0ce5509e5a9b86"  # <-- 여기 채우기
+CAREERNET_API_KEY = st.secrets["CAREERNET_API_KEY"]  # <-- 여기 채우기
 
 JOB_LIST_URL = "https://www.career.go.kr/cnet/front/openapi/jobs.json"
 JOB_DETAIL_URL = "https://www.career.go.kr/cnet/front/openapi/job.json"
