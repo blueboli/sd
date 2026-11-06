@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 
 import streamlit as st 
 import requests
+import re
 
 # TODO: 여기에 발급받은 인증키를 그대로 넣으세요 (비공개 레포)
 CAREERNET_API_KEY = "3dc1e6f664b6dba28e0ce5509e5a9b86"  # <-- 여기 채우기
@@ -17,7 +18,13 @@ JOB_LIST_URL = "https://www.career.go.kr/cnet/front/openapi/jobs.json"
 JOB_DETAIL_URL = "https://www.career.go.kr/cnet/front/openapi/job.json"
 MAJOR_URL = "https://www.career.go.kr/cnet/openapi/getOpenApi"
 
+def remove_html_tags(text):
+    """문자열에 포함된 HTML 태그 제거"""
+    if not text:
+        return "정보 없음"
 
+    return re.sub(r"<[^>]*>", "", str(text)).strip()
+    
 def search_job(keyword: str) -> list[dict]:
     """직업백과 목록 검색 -> [{job_cd, job_nm, top_nm, wage, work, ...}, ...]"""
     res = requests.get(
@@ -99,7 +106,7 @@ def get_major_detail(major_seq, gubun: str = "univ_list") -> dict:
     return {
         "major": content.findtext("major"),
         "summary": content.findtext("summary"),
-        "employment": content.findtext("employment"),
+        "employment": remove_html_tags(content.findtext("employment")),
         "salary": content.findtext("salary"),
         "job": content.findtext("job"),
         "interest": content.findtext("interest"),
