@@ -125,7 +125,7 @@ elif st.session_state.detail_type == "major":
             st.subheader("취업률")
             st.write(major.get("employment", "정보 없음"))
             st.subheader("졸업 후 임금")
-            st.write('첫직장임금(월) - 평균값', major.get("salary", "정보 없음") '만원')
+            st.write('첫직장임금(월) - 평균값', major.get("salary", "정보 없음"), '만원')
 
         st.divider()
         st.subheader("🔗 관련 직업")
