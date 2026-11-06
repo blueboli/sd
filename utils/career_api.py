@@ -53,12 +53,6 @@ def search_major(keyword: str, gubun: str = "대학교") -> list[dict]:
     res = requests.get(MAJOR_URL, params=params, timeout=5)
 
     res.raise_for_status()
-    st.code(res.url) 
-    st.code(res.text[:500])
-    
-    # 디버깅용 — 원인 확인되면 지워도 됨
-    print("REQUEST URL:", res.url)
-    print("RAW RESPONSE:", res.text[:300])
 
     root = ET.fromstring(res.content)
     if root.tag != "dataSearch":
