@@ -1,11 +1,11 @@
 """F-002 대입정보 비교 대시보드
 
-외부 Excel 원본을 자동으로 읽어 대학을 최대 5개까지 고르고,
-같은 전형구분의 교과·서류·면접·논술·수능·실기 반영비율과
+외부 CSV 원본을 자동으로 읽어 대학을 최대 5개까지 고르고,
+같은 전형구분의 교과·서류·면접·논술·수능·기타 반영비율과
 수능최저 여부를 비교한다.
 
-기본 원본 경로: data/admission_2028.xlsx
-다른 로컬 경로나 URL은 ADMISSION_EXCEL_SOURCE 환경변수로 지정한다.
+기본 원본 경로: data/admission_2028.csv
+다른 로컬 경로나 URL은 ADMISSION_CSV_SOURCE 환경변수로 지정한다.
 """
 
 import os
@@ -25,7 +25,7 @@ st.set_page_config(
 )
 
 
-WEIGHTS = ["교과", "서류", "면접", "논술", "수능", "실기"]
+WEIGHTS = ["교과", "서류", "면접", "논술", "수능", "기타"]
 
 WEIGHT_COLORS = {
     "교과": "#2563eb",
@@ -33,15 +33,12 @@ WEIGHT_COLORS = {
     "면접": "#f97316",
     "논술": "#8b5cf6",
     "수능": "#ef4444",
-    "실기": "#14b8a6",
+    "기타": "#14b8a6",
 }
 
 CAT_ORDER = [
-    "학생부교과",
-    "학생부종합",
-    "논술",
-    "정시",
-    "실기",
+    "교과",
+    "종합",
 ]
 
 
@@ -67,6 +64,8 @@ COLUMN_ALIASES = {
     "선발방식": [
         "선발방식",
         "선발 방식",
+        "전형방법_원문",
+        "전형방법",
     ],
     "주요반영요소": [
         "주요반영요소",
@@ -75,37 +74,50 @@ COLUMN_ALIASES = {
         "반영 요소",
     ],
     "교과": [
+        "교과반영률(%)",
+        "교과 반영률(%)",
         "교과반영률",
         "교과 반영률",
         "교과",
     ],
     "서류": [
+        "서류반영률(%)",
+        "서류 반영률(%)",
         "서류반영률",
         "서류 반영률",
         "서류",
     ],
     "면접": [
+        "면접반영률(%)",
+        "면접 반영률(%)",
         "면접반영률",
         "면접 반영률",
         "면접",
     ],
     "논술": [
+        "논술반영률(%)",
+        "논술 반영률(%)",
         "논술반영률",
         "논술 반영률",
         "논술",
     ],
     "수능": [
+        "수능반영률(%)",
+        "수능 반영률(%)",
         "수능반영률",
         "수능 반영률",
         "수능",
     ],
-    "실기": [
-        "실기반영률",
-        "실기 반영률",
-        "실기",
+    "기타": [
+        "기타반영률(%)",
+        "기타 반영률(%)",
+        "기타반영률",
+        "기타 반영률",
+        "기타",
     ],
     "수능최저": [
         "수능최저여부",
+        "수능최저 여부",
         "수능최저",
         "수능 최저 여부",
         "수능최저학력기준",
@@ -260,8 +272,8 @@ def normalize_data(raw: pd.DataFrame) -> pd.DataFrame:
         if optional_column not in frame:
             frame[optional_column] = ""
 
-    if "실기" not in frame:
-        frame["실기"] = 0.0
+    if "기타" not in frame:
+        frame["기타"] = 0.0
 
     required_data = [
         "대학명",
@@ -321,20 +333,17 @@ def normalize_data(raw: pd.DataFrame) -> pd.DataFrame:
 
 
 @st.cache_data(show_spinner=False)
-def read_excel_sheet(
-    file_bytes: bytes,
-    sheet_name: str,
-) -> pd.DataFrame:
-    """Excel 바이트 데이터를 읽는다."""
-    return pd.read_excel(
+def read_csv_data(file_bytes: bytes) -> pd.DataFrame:
+    """UTF-8-SIG 인코딩의 CSV 바이트 데이터를 읽는다."""
+    return pd.read_csv(
         BytesIO(file_bytes),
-        sheet_name=sheet_name,
+        encoding="utf-8-sig",
     )
 
 
 @st.cache_data(show_spinner=False)
 def read_external_source(source: str) -> bytes:
-    """로컬 파일 또는 HTTP(S) URL에서 Excel 원본을 읽는다."""
+    """로컬 파일 또는 HTTP(S) URL에서 CSV 원본을 읽는다."""
     if source.startswith(
         ("http://", "https://")
     ):
@@ -350,16 +359,16 @@ def read_external_source(source: str) -> bytes:
 
 
 def get_external_source() -> str:
-    """외부 Excel 기본 경로 또는 환경변수 경로를 반환한다."""
+    """외부 CSV 기본 경로 또는 환경변수 경로를 반환한다."""
     default_path = (
         Path(__file__).resolve().parents[1]
         / "data"
-        / "admission_2028.xlsx"
+        / "admission_2028.csv"
     )
 
     return os.getenv(
-        "ADMISSION_EXCEL_SOURCE",
-        str(default_path),
+        "ADMISSION_CSV_SOURCE",
+        os.getenv("ADMISSION_EXCEL_SOURCE", str(default_path)),
     ).strip()
 
 
@@ -388,7 +397,7 @@ def make_long_weights(
 st.title("⚖️ 대입정보 비교")
 
 st.caption(
-    "외부 Excel 원본을 자동으로 불러와 "
+    "외부 CSV 원본을 자동으로 불러와 "
     "대학 최대 5개와 전형구분별 반영비율을 비교합니다."
 )
 
@@ -398,23 +407,7 @@ source = get_external_source()
 try:
     file_bytes = read_external_source(source)
 
-    workbook = pd.ExcelFile(
-        BytesIO(file_bytes)
-    )
-
-    sheet_name = workbook.sheet_names[0]
-
-    if len(workbook.sheet_names) > 1:
-        sheet_name = st.selectbox(
-            "불러올 시트",
-            workbook.sheet_names,
-        )
-
-    raw_data = read_excel_sheet(
-        file_bytes,
-        sheet_name,
-    )
-
+    raw_data = read_csv_data(file_bytes)
     df = normalize_data(raw_data)
 
 except ValueError as exc:
@@ -423,20 +416,20 @@ except ValueError as exc:
 
 except FileNotFoundError:
     st.error(
-        "외부 Excel 원본을 찾을 수 없습니다."
+        "외부 CSV 원본을 찾을 수 없습니다."
     )
 
     st.info(
         "기본 경로 "
-        "`data/admission_2028.xlsx`에 파일을 두거나 "
-        "`ADMISSION_EXCEL_SOURCE`를 지정해 주세요."
+        "`data/admission_2028.csv`에 파일을 두거나 "
+        "`ADMISSION_CSV_SOURCE`를 지정해 주세요."
     )
 
     st.stop()
 
 except Exception as exc:
     st.error(
-        f"Excel 파일을 읽을 수 없습니다: {exc}"
+        f"CSV 파일을 읽을 수 없습니다: {exc}"
     )
     st.stop()
 
@@ -474,7 +467,7 @@ categories += [
 
 
 st.success(
-    "외부 Excel 원본에서 "
+    "외부 CSV 원본에서 "
     f"{len(df)}개 전형, "
     f"{len(universities)}개 대학을 불러왔습니다."
 )
