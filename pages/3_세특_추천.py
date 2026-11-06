@@ -2,7 +2,6 @@ import streamlit as st
 from utils.gemini_api import generate_topics
 
 
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 # 페이지 설정
 
 st.set_page_config(
