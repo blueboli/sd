@@ -40,7 +40,7 @@ def get_job_detail(job_cd) -> dict:
     return res.json()
 
 
-def search_major(keyword: str, gubun: str = "대학교") -> list[dict]:
+def search_major(keyword: str, gubun: str = "univ_list") -> list[dict]:
     """학과정보 목록 검색 -> [{majorSeq, lClass, mClass, facilName}, ...]"""
     params = {
         "apiKey": CAREERNET_API_KEY,
@@ -72,7 +72,7 @@ def search_major(keyword: str, gubun: str = "대학교") -> list[dict]:
     ]
 
 
-def get_major_detail(major_seq, gubun: str = "대학교") -> dict:
+def get_major_detail(major_seq, gubun: str = "univ_list") -> dict:
     """학과정보 상세 -> {major, summary, employment, salary, job, universities, ...}"""
     query = "&".join([
         f"apiKey={CAREERNET_API_KEY}",
