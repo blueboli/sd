@@ -12,7 +12,7 @@ st.set_page_config(
 
 st.title("📚 AI 기반 세특(세부능력특기사항) 탐구주제 추천")
 st.markdown(
-    "학생의 학년과 관심 분야를 바탕으로 **Gemini 2.5 Flash**가 "
+    "학생의 학년과 관심 분야를 바탕으로 **Gemini 2.5 Flash-Lite**가 "
     "맞춤형 탐구 주제와 심화 방향을 제안합니다."
 )
 st.markdown("---")
@@ -75,7 +75,7 @@ if submitted:
     else:
         # Gemini API 호출 중 로딩 표시
         with st.spinner(
-            "✨ Gemini 2.5 Flash가 생기부를 빛내줄 반짝이는 아이디어를 "
+            "✨ Gemini 2.5 Flash-Lite가 생기부를 빛내줄 반짝이는 아이디어를 "
             "구상 중입니다... 잠시만 기다려주세요!"
         ):
             try:
